@@ -6,6 +6,7 @@ A comprehensive **Restaurant Billing & Management System** built with Python, Tk
 ![Tkinter](https://img.shields.io/badge/GUI-Tkinter-green)
 ![SQLite](https://img.shields.io/badge/Database-SQLite-lightblue)
 ![License](https://img.shields.io/badge/License-MIT-yellow)
+![Tests](https://img.shields.io/badge/Tests-59%20Passed-brightgreen)
 
 ---
 
@@ -24,6 +25,8 @@ A comprehensive **Restaurant Billing & Management System** built with Python, Tk
 | 📈 **Analytics** | 4 embedded charts (top items, monthly, category, hourly) |
 | ⚙️ **Settings** | Restaurant name, tax rate, tables, currency |
 | 📤 **CSV Export** | Export all order data to CSV |
+| ⌨️ **Keyboard Shortcuts** | F1-F6 navigation, Ctrl+N, Ctrl+E, Ctrl+Q |
+| 💾 **Backup & Restore** | Database backup, restore, and cleanup CLI |
 
 ---
 
@@ -35,7 +38,7 @@ git clone https://github.com/prasanna-gowd/SmartBill.git
 cd SmartBill
 
 # Install dependencies
-pip install matplotlib
+pip install -r requirements.txt
 
 # Run the application
 python main.py
@@ -51,10 +54,16 @@ python main.py
 SmartBill/
 ├── main.py                      # Main application (SmartBillApp class)
 ├── modules/
-│   ├── __init__.py              # Package marker
-│   └── db_manager.py            # DatabaseManager class
+│   ├── __init__.py              # Package exports
+│   ├── config.py                # Colors, fonts, constants
+│   ├── db_manager.py            # Database operations
+│   ├── validators.py            # Input validation
+│   ├── report_generator.py      # Report generation
+│   └── backup_manager.py        # Backup & restore
+├── tests/
+│   └── test_smartbill.py        # 59 unit tests
 ├── database/                    # SQLite database (auto-created)
-├── reports/                     # Saved receipts
+├── reports/                     # Saved receipts & reports
 ├── setup_guide.html             # Step-by-step setup guide
 ├── project_documentation.html   # Full project documentation
 ├── analytics.py                 # Standalone top-items chart
@@ -101,6 +110,20 @@ SmartBill/
 | `sqlite3` | ✅ Built-in | Database |
 | `matplotlib` | ⭐ Recommended | Analytics charts |
 | `tkcalendar` | Optional | Date picker (legacy scripts) |
+
+---
+
+## 🧪 Running Tests
+
+```bash
+python -m unittest tests.test_smartbill -v
+```
+
+---
+
+## 🤝 Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup and guidelines.
 
 ---
 
