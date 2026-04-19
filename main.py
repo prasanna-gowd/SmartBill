@@ -102,9 +102,38 @@ class SmartBillApp:
         # Configure ttk styles
         self._configure_styles()
 
+        # Keyboard shortcuts
+        self._bind_shortcuts()
+
         # Show login
         self.show_login()
         self.root.mainloop()
+
+    def _bind_shortcuts(self):
+        """Bind keyboard shortcuts for navigation and actions."""
+        shortcuts = {
+            '<F1>': lambda e: self._shortcut('dashboard'),
+            '<F2>': lambda e: self._shortcut('pos'),
+            '<F3>': lambda e: self._shortcut('orders'),
+            '<F4>': lambda e: self._shortcut('menu'),
+            '<F5>': lambda e: self._shortcut('analytics'),
+            '<F6>': lambda e: self._shortcut('settings'),
+            '<Control-n>': lambda e: self._shortcut('pos'),
+            '<Control-e>': lambda e: self._shortcut_export(),
+            '<Control-q>': lambda e: self.logout(),
+        }
+        for key, handler in shortcuts.items():
+            self.root.bind(key, handler)
+
+    def _shortcut(self, view_name):
+        """Handle navigation shortcuts (only when logged in)."""
+        if self.current_user:
+            self.switch_view(view_name)
+
+    def _shortcut_export(self):
+        """Handle export shortcut."""
+        if self.current_user:
+            self.export_orders()
 
     def _configure_styles(self):
         """Configure ttk widget styles for a modern look."""
