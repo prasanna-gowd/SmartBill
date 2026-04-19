@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartBill Pro v2.0 — Complete Project Documentation</title>
+
+    <style>
+        :root {
+            --primary: #0f172a;
+            --secondary: #1e293b;
+            --accent: #3b82f6;
+            --accent-light: #60a5fa;
+            --accent-bg: #eff6ff;
+            --surface: #f8fafc;
+            --card: #ffffff;
+            --text: #1e293b;
+            --text-secondary: #64748b;
+            --success: #22c55e;
+            --success-bg: #f0fdf4;
+            --warning: #f59e0b;
+            --warning-bg: #fffbeb;
+            --error: #ef4444;
+            --border: #e2e8f0;
+            --purple: #8b5cf6;
+            --purple-bg: #f5f3ff;
+            --teal: #14b8a6;
+            --teal-bg: #f0fdfa;
+            --gradient-1: #667eea;
+            --gradient-2: #764ba2;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--surface);
+            color: var(--text);
+            line-height: 1.8;
+        }
+
+        /* ---- Hero ---- */
+        .hero {
+            background: linear-gradient(135deg, var(--primary) 0%, #1a1a3e 40%, #0f3460 100%);
+            color: white;
+            padding: 80px 0 70px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 25% 40%, rgba(102,126,234,0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 75% 70%, rgba(139,92,246,0.1) 0%, transparent 50%);
+        }
+        .hero-content { position: relative; z-index: 1; }
+        .hero-icon { font-size: 72px; margin-bottom: 16px; }
+        .hero h1 { font-size: 52px; font-weight: 800; letter-spacing: -1.5px; margin-bottom: 10px; }
+        .hero h1 span { background: linear-gradient(135deg, var(--accent-light), #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero .subtitle { font-size: 20px; color: rgba(255,255,255,0.65); font-weight: 300; max-width: 600px; margin: 0 auto; }
+        .hero .badges { margin-top: 24px; display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+        .hero .badge {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.12);
+            padding: 6px 16px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 500;
+            color: rgba(255,255,255,0.8);
+        }
+
+        /* ---- Nav/TOC ---- */
+        .toc-bar {
+            background: var(--card);
+            border-bottom: 1px solid var(--border);
+            padding: 14px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+        }
+        .toc-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        .toc-inner::-webkit-scrollbar { display: none; }
+        .toc-link {
+            padding: 6px 16px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            text-decoration: none;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+        .toc-link:hover { background: var(--accent-bg); color: var(--accent); }
+
+        /* ---- Container ---- */
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+        /* ---- Section ---- */
+        .section { padding: 60px 0 40px; }
+        .section-header {
+            margin-bottom: 32px;
+        }
+        .section-label {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--accent);
+            margin-bottom: 8px;
+        }
+        .section-title {
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+        }
+        .section-desc {
+            font-size: 16px;
+            color: var(--text-secondary);
+            max-width: 680px;
+        }
+
+        /* ---- Divider ---- */
+        .divider { height: 1px; background: var(--border); }
+
+        /* ---- Cards ---- */
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 20px;
+            transition: box-shadow 0.3s, transform 0.2s;
+        }
+        .card:hover { box-shadow: 0 8px 30px rgba(0,0,0,0.06); transform: translateY(-2px); }
+        .card-title { font-size: 18px; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+        .card p { color: var(--text-secondary); font-size: 14px; }
+
+        /* ---- Grid Layouts ---- */
+        .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+        @media (max-width: 768px) {
+            .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 36px; }
+        }
+
+        /* ---- Feature Cards ---- */
+        .feature-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 26px;
+            transition: all 0.3s;
+        }
+        .feature-card:hover { box-shadow: 0 8px 30px rgba(0,0,0,0.06); transform: translateY(-3px); }
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 14px;
+        }
+        .feature-card h4 { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
+        .feature-card p { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+
+        /* ---- Code Blocks ---- */
+        .code-block {
+            background: var(--primary);
+            color: #e2e8f0;
+            border-radius: 12px;
+            padding: 20px 24px;
+            font-family: Consolas, 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.8;
+            margin: 16px 0;
+            overflow-x: auto;
+            position: relative;
+        }
+        .code-block .kw { color: var(--accent-light); }
+        .code-block .str { color: #fbbf24; }
+        .code-block .comment { color: #64748b; font-style: italic; }
+        .code-block .fn { color: #a78bfa; }
+        .code-block .type { color: #34d399; }
+        .code-label {
+            background: var(--secondary);
+            color: #94a3b8;
+            font-size: 11px;
+            font-family: Consolas, 'Courier New', monospace;
+            padding: 6px 14px;
+            border-radius: 12px 12px 0 0;
+            display: inline-block;
+            margin-bottom: -1px;
+        }
+
+        code {
+            background: #f1f5f9;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-family: Consolas, 'Courier New', monospace;
+            font-size: 13px;
+            color: var(--accent);
+            border: 1px solid var(--border);
+        }
+
+        /* ---- Tables ---- */
+        .styled-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 16px 0;
+            font-size: 14px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+        .styled-table th {
+            background: var(--primary);
+            color: white;
+            padding: 14px 20px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+        }
+        .styled-table td {
+            padding: 12px 20px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+        .styled-table tr:last-child td { border-bottom: none; }
+        .styled-table tr:hover td { background: #f8fafc; }
+
+        /* ---- Alerts ---- */
+        .alert {
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin: 16px 0;
+            display: flex;
+            gap: 12px;
+            font-size: 14px;
+        }
+        .alert-icon { font-size: 18px; flex-shrink: 0; }
+        .alert-info { background: var(--accent-bg); border: 1px solid #bfdbfe; color: #1e40af; }
+        .alert-success { background: var(--success-bg); border: 1px solid #bbf7d0; color: #166534; }
+        .alert-warning { background: var(--warning-bg); border: 1px solid #fde68a; color: #92400e; }
+
+        /* ---- Architecture Diagram ---- */
+        .arch-box {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 16px;
+            padding: 36px;
+            color: white;
+        }
+        .arch-row { display: flex; gap: 16px; margin-bottom: 16px; justify-content: center; flex-wrap: wrap; }
+        .arch-node {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 12px;
+            padding: 16px 24px;
+            text-align: center;
+            min-width: 140px;
+        }
+        .arch-node .icon { font-size: 28px; margin-bottom: 6px; }
+        .arch-node h5 { font-size: 13px; font-weight: 600; }
+        .arch-node p { font-size: 11px; color: rgba(255,255,255,0.5); }
+        .arch-arrow { text-align: center; font-size: 24px; color: rgba(255,255,255,0.3); margin: 8px 0; }
+        .arch-node.highlight { background: rgba(59,130,246,0.2); border-color: rgba(59,130,246,0.4); }
+
+        /* ---- Tech Stack Icons ---- */
+        .tech-card {
+            text-align: center;
+            padding: 28px 16px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            transition: all 0.3s;
+        }
+        .tech-card:hover { box-shadow: 0 8px 30px rgba(0,0,0,0.06); transform: translateY(-3px); }
+        .tech-card .icon { font-size: 40px; margin-bottom: 12px; }
+        .tech-card h4 { font-size: 15px; font-weight: 600; }
+        .tech-card p { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
+
+        /* ---- Flow Diagram ---- */
+        .flow-container { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: center; margin: 24px 0; }
+        .flow-step {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px 18px;
+            text-align: center;
+            min-width: 120px;
+        }
+        .flow-step .icon { font-size: 24px; }
+        .flow-step h5 { font-size: 12px; font-weight: 600; margin-top: 4px; }
+        .flow-arrow { font-size: 20px; color: var(--accent); font-weight: bold; }
+
+        /* ---- Stats Strip ---- */
+        .stat-strip {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin: 30px 0;
+        }
+        .stat-box {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 22px 20px;
+            text-align: center;
+        }
+        .stat-box .num { font-size: 32px; font-weight: 800; color: var(--accent); }
+        .stat-box .label { font-size: 12px; color: var(--text-secondary); font-weight: 500; margin-top: 4px; }
+
+        @media (max-width: 768px) {
+            .stat-strip { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        /* ---- Footer ---- */
+        .footer {
+            background: var(--primary);
+            color: rgba(255,255,255,0.6);
+            text-align: center;
+            padding: 40px 24px;
+            font-size: 14px;
+        }
+        .footer strong { color: white; }
+        .footer .divider-f { width: 60px; height: 3px; background: var(--accent); margin: 16px auto; border-radius: 2px; }
+    </style>
+</head>
+<body>
+
+    <!-- ============ HERO ============ -->
+    <div class="hero">
+        <div class="hero-content">
+            <div class="hero-icon">🧾</div>
+            <h1>SmartBill <span>Pro</span></h1>
+            <p class="subtitle">A comprehensive restaurant billing and management system built with Python, Tkinter, and SQLite</p>
+            <div class="badges">
+                <span class="badge">🐍 Python 3</span>
+                <span class="badge">🖥️ Tkinter GUI</span>
+                <span class="badge">🗄️ SQLite</span>
+                <span class="badge">📊 Matplotlib</span>
+                <span class="badge">v2.0</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ TABLE OF CONTENTS ============ -->
+    <div class="toc-bar">
+        <div class="toc-inner">
+            <a href="#overview" class="toc-link">Overview</a>
+            <a href="#tech" class="toc-link">Tech Stack</a>
+            <a href="#architecture" class="toc-link">Architecture</a>
+            <a href="#features" class="toc-link">Features</a>
+            <a href="#database" class="toc-link">Database</a>
+            <a href="#modules" class="toc-link">Modules</a>
+            <a href="#workflow" class="toc-link">Workflow</a>
+            <a href="#ui" class="toc-link">UI Design</a>
+            <a href="#code" class="toc-link">Code Highlights</a>
+            <a href="#future" class="toc-link">Future Scope</a>
+        </div>
+    </div>
+
+    <div class="container">
+
+        <!-- ============ 1. OVERVIEW ============ -->
+        <div class="section" id="overview">
+            <div class="section-header">
+                <div class="section-label">Chapter 1</div>
+                <div class="section-title">Project Overview</div>
+                <div class="section-desc">SmartBill Pro is a desktop restaurant billing application that streamlines order management, menu configuration, and business analytics.</div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">🎯 Problem Statement</div>
+                <p>Small to medium restaurants often rely on manual billing — handwritten orders, paper receipts, and no data insights. This leads to errors, slow service, lost revenue tracking, and no analytics. SmartBill Pro solves these problems with a digital billing system that handles the entire order lifecycle.</p>
+            </div>
+
+            <div class="card">
+                <div class="card-title">💡 Solution</div>
+                <p>A standalone desktop application that provides table-based ordering, a searchable menu, real-time cart with discount/tax calculations, receipt generation, comprehensive order history, full menu CRUD operations, visual analytics, and configurable settings — all backed by a local SQLite database requiring zero server setup.</p>
+            </div>
+
+            <div class="stat-strip">
+                <div class="stat-box">
+                    <div class="num">6</div>
+                    <div class="label">Application Views</div>
+                </div>
+                <div class="stat-box">
+                    <div class="num">44</div>
+                    <div class="label">Pre-loaded Menu Items</div>
+                </div>
+                <div class="stat-box">
+                    <div class="num">12</div>
+                    <div class="label">Menu Categories</div>
+                </div>
+                <div class="stat-box">
+                    <div class="num">5</div>
+                    <div class="label">Database Tables</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- ============ 2. TECH STACK ============ -->
+        <div class="section" id="tech">
+            <div class="section-header">
+                <div class="section-label">Chapter 2</div>
+                <div class="section-title">Technology Stack</div>
+                <div class="section-desc">Built entirely with Python's standard library (plus matplotlib for charts). No complex setup, no server, no internet required.</div>
+            </div>
+
+            <div class="grid-4">
+                <div class="tech-card">
+                    <div class="icon">🐍</div>
+                    <h4>Python 3</h4>
+                    <p>Core language</p>
+                </div>
+                <div class="tech-card">
+                    <div class="icon">🖥️</div>
+                    <h4>Tkinter</h4>
+                    <p>GUI framework (built-in)</p>
+                </div>
+                <div class="tech-card">
+                    <div class="icon">🗄️</div>
+                    <h4>SQLite 3</h4>
+                    <p>Embedded database</p>
+                </div>
+                <div class="tech-card">
+                    <div class="icon">📊</div>
+                    <h4>Matplotlib</h4>
+                    <p>Data visualization</p>
+                </div>
+            </div>
+
+            <div class="card" style="margin-top: 20px;">
+                <div class="card-title">🔧 Why These Technologies?</div>
+                <table class="styled-table">
+                    <thead>
+                        <tr><th>Technology</th><th>Role</th><th>Rationale</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>Python</strong></td><td>Application logic</td><td>Easy to learn, extensive standard library, cross-platform</td></tr>
+                        <tr><td><strong>Tkinter</strong></td><td>User interface</td><td>Ships with Python — zero installation. Native look. Fast prototyping</td></tr>
+                        <tr><td><strong>SQLite</strong></td><td>Data persistence</td><td>Serverless, file-based, ACID-compliant, built into Python</td></tr>
+                        <tr><td><strong>Matplotlib</strong></td><td>Charts & graphs</td><td>Industry-standard plotting library with Tkinter embedding support</td></tr>
+                        <tr><td><strong>CSV module</strong></td><td>Data export</td><td>Built-in Python module for exporting order data</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- ============ 3. ARCHITECTURE ============ -->
+        <div class="section" id="architecture">
+            <div class="section-header">
+                <div class="section-label">Chapter 3</div>
+                <div class="section-title">System Architecture</div>
+                <div class="section-desc">The application follows a modular MVC-inspired pattern with a clean separation between database operations and UI logic.</div>
+            </div>
+
+            <div class="arch-box">
+                <div class="arch-row">
+                    <div class="arch-node highlight">
+                        <div class="icon">👤</div>
+                        <h5>User</h5>
+                        <p>Restaurant Staff</p>
+                    </div>
+                </div>
+                <div class="arch-arrow">⬇</div>
+                <div class="arch-row">
+                    <div class="arch-node highlight">
+                        <div class="icon">🖥️</div>
+                        <h5>main.py</h5>
+                        <p>SmartBillApp Class</p>
+                    </div>
+                </div>
+                <div class="arch-arrow">⬇</div>
+                <div class="arch-row">
+                    <div class="arch-node">
+                        <div class="icon">📊</div>
+                        <h5>Dashboard</h5>
+                    </div>
+                    <div class="arch-node">
+                        <div class="icon">🛒</div>
+                        <h5>POS</h5>
+                    </div>
+                    <div class="arch-node">
+                        <div class="icon">📋</div>
+                        <h5>Orders</h5>
+                    </div>
+                    <div class="arch-node">
+                        <div class="icon">📝</div>
+                        <h5>Menu</h5>
+                    </div>
+                    <div class="arch-node">
+                        <div class="icon">📈</div>
+                        <h5>Analytics</h5>
+                    </div>
+                    <div class="arch-node">
+                        <div class="icon">⚙️</div>
+                        <h5>Settings</h5>
+                    </div>
+                </div>
+                <div class="arch-arrow">⬇</div>
+                <div class="arch-row">
+                    <div class="arch-node highlight">
+                        <div class="icon">🗄️</div>
+                        <h5>db_manager.py</h5>
+                        <p>DatabaseManager Class</p>
+                    </div>
+                </div>
+                <div class="arch-arrow">⬇</div>
+                <div class="arch-row">
+                    <div class="arch-node">
+                        <div class="icon">💾</div>
+                        <h5>smartbill.db</h5>
+                        <p>SQLite Database</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" style="margin-top: 24px;">
+                <div class="card-title">📁 Project File Structure</div>
+                <div class="code-block">
+SmartBill/
+├── main.py                      <span class="comment"># Main application — SmartBillApp class (~1100 lines)</span>
+├── modules/
+│   ├── __init__.py              <span class="comment"># Python package marker</span>
+│   └── db_manager.py            <span class="comment"># DatabaseManager class (~340 lines)</span>
+├── database/
+│   └── smartbill.db             <span class="comment"># SQLite database (auto-created)</span>
+├── reports/
+│   └── receipt_*.txt            <span class="comment"># Saved order receipts</span>
+├── assets/                      <span class="comment"># Reserved for future assets</span>
+├── setup_guide.html             <span class="comment"># Setup & run guide (this file's companion)</span>
+├── project_documentation.html   <span class="comment"># Full project documentation (this file)</span>
+├── analytics.py                 <span class="comment"># Legacy: standalone top items chart</span>
+├── monthly_sales.py             <span class="comment"># Legacy: standalone monthly chart</span>
+├── datewise_analysis.py         <span class="comment"># Legacy: date-range analysis GUI</span>
+├── init_db.py                   <span class="comment"># Legacy: database initializer</span>
+└── insert_menu_items.py         <span class="comment"># Legacy: menu item seeder</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- ============ 4. FEATURES ============ -->
+        <div class="section" id="features">
+            <div class="section-header">
+                <div class="section-label">Chapter 4</div>
+                <div class="section-title">Features & Functionality</div>
+                <div class="section-desc">A detailed breakdown of every feature available in SmartBill Pro v2.0.</div>
+            </div>
+
+            <div class="grid-3">
+                <div class="feature-card">
+                    <div class="feature-icon" style="background: var(--accent-bg);">🔐</div>
+                    <h4>User Authentication</h4>
+                    <p>Login system with admin and staff roles. Each order is tracked to the logged-in user. Pre-configured default accounts.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon" style="background: var(--success-bg);">📊</div>
+                    <h4>Live Dashboard</h4>
+                    <p>Real-time statistics cards showing today's revenue, order count, average order value, and total menu items. Recent orders list and quick action buttons.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon" style="background: var(--purple-bg);">🛒</div>
+                    <h4>POS / Billing System</h4>
+                    <p>Table-based ordering (1–20 tables). Browse 12 categories, search items live, add to cart with +/− quantity controls. Discount and tax calculations.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon" style="background: var(--warning-bg);">🔍</div>
+                    <h4>Menu Search</h4>
+                    <p>Live search across all menu categories. Results update as you type, making it fast to find items during peak hours.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon" style="background: var(--teal-bg);">💰</div>
+                    <h4>Discount & Tax</h4>
+                    <p>Configurable discount percentage per order. Tax rate set in settings (default 5%). Real-time total recalculation in the cart panel.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon" style="background: var(--accent-bg);">💳</div>
+                    <h4>Payment Methods</h4>
+                    <p>Choose between Cash, Card, or UPI for each order. Payment method is recorded and visible in order history and receipts.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon" style="background: var(--success-bg);">🧾</div>
+                    <h4>Receipt Generation</h4>
+                    <p>Formatted receipt displayed after each order. Save receipts as text files in the reports/ folder for record keeping or printing.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon" style="background: var(--purple-bg);">📋</div>
+                    <h4>Order History</h4>
+                    <p>View all past orders with date range and table number filters. Double-click to see itemized details. Sort and browse efficiently.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon" style="background: var(--warning-bg);">📝</div>
+                    <h4>Menu Management</h4>
+                    <p>Full CRUD: Add new items, edit name/price/category, soft-delete items (preserved in DB). Filter by category and search by name.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon" style="background: var(--teal-bg);">📈</div>
+                    <h4>Analytics Dashboard</h4>
+                    <p>Four embedded matplotlib charts: Top Selling Items (bar), Monthly Revenue (bar), Category Breakdown (pie), Hourly Distribution (area).</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon" style="background: var(--accent-bg);">📤</div>
+                    <h4>CSV Export</h4>
+                    <p>Export all order data to CSV with a file save dialog. Useful for external analysis in Excel or Google Sheets.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon" style="background: var(--success-bg);">⚙️</div>
+                    <h4>Configurable Settings</h4>
+                    <p>Set restaurant name, tax rate, number of tables, and currency symbol. All settings persist in the database across sessions.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- ============ 5. DATABASE ============ -->
+        <div class="section" id="database">
+            <div class="section-header">
+                <div class="section-label">Chapter 5</div>
+                <div class="section-title">Database Design</div>
+                <div class="section-desc">The application uses SQLite with 5 tables. The schema supports full order tracking, user management, and persistent settings.</div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">📐 Entity-Relationship Overview</div>
+                <div class="flow-container">
+                    <div class="flow-step"><div class="icon">👤</div><h5>Users</h5></div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step"><div class="icon">📦</div><h5>Orders</h5></div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step"><div class="icon">📝</div><h5>OrderItems</h5></div>
+                    <span class="flow-arrow">←</span>
+                    <div class="flow-step"><div class="icon">🍽️</div><h5>Menu</h5></div>
+                </div>
+                <p style="text-align: center; color: var(--text-secondary); font-size: 13px;">Users create Orders → Orders contain OrderItems → OrderItems reference Menu items</p>
+            </div>
+
+            <div class="card">
+                <div class="card-title">🗄️ Table: Users</div>
+                <p>Stores login credentials and role information.</p>
+                <table class="styled-table">
+                    <thead><tr><th>Column</th><th>Type</th><th>Description</th></tr></thead>
+                    <tbody>
+                        <tr><td><code>id</code></td><td>INTEGER PK</td><td>Auto-incremented user ID</td></tr>
+                        <tr><td><code>username</code></td><td>TEXT UNIQUE</td><td>Login username</td></tr>
+                        <tr><td><code>password</code></td><td>TEXT</td><td>Login password (plain text for simplicity)</td></tr>
+                        <tr><td><code>role</code></td><td>TEXT</td><td>"admin" or "staff"</td></tr>
+                        <tr><td><code>created_at</code></td><td>TEXT</td><td>Account creation timestamp</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card">
+                <div class="card-title">🗄️ Table: Menu</div>
+                <p>Stores all menu items with soft-delete support.</p>
+                <table class="styled-table">
+                    <thead><tr><th>Column</th><th>Type</th><th>Description</th></tr></thead>
+                    <tbody>
+                        <tr><td><code>id</code></td><td>INTEGER PK</td><td>Auto-incremented item ID</td></tr>
+                        <tr><td><code>name</code></td><td>TEXT</td><td>Item name (e.g., "Chicken Biryani")</td></tr>
+                        <tr><td><code>price</code></td><td>REAL</td><td>Price in configured currency</td></tr>
+                        <tr><td><code>category</code></td><td>TEXT</td><td>Category name (e.g., "Non-Veg Biryanis")</td></tr>
+                        <tr><td><code>is_active</code></td><td>INTEGER</td><td>1 = active, 0 = soft-deleted</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card">
+                <div class="card-title">🗄️ Table: Orders</div>
+                <p>Stores every order with full financial breakdown.</p>
+                <table class="styled-table">
+                    <thead><tr><th>Column</th><th>Type</th><th>Description</th></tr></thead>
+                    <tbody>
+                        <tr><td><code>id</code></td><td>INTEGER PK</td><td>Auto-incremented order ID</td></tr>
+                        <tr><td><code>table_number</code></td><td>INTEGER</td><td>Table served (1–20)</td></tr>
+                        <tr><td><code>datetime</code></td><td>TEXT</td><td>Order timestamp</td></tr>
+                        <tr><td><code>subtotal</code></td><td>REAL</td><td>Sum of item prices before discount/tax</td></tr>
+                        <tr><td><code>discount_percent</code></td><td>REAL</td><td>Discount percentage applied</td></tr>
+                        <tr><td><code>discount_amount</code></td><td>REAL</td><td>Calculated discount amount</td></tr>
+                        <tr><td><code>tax_percent</code></td><td>REAL</td><td>Tax rate applied</td></tr>
+                        <tr><td><code>tax_amount</code></td><td>REAL</td><td>Calculated tax amount</td></tr>
+                        <tr><td><code>total_amount</code></td><td>REAL</td><td>Final payable amount</td></tr>
+                        <tr><td><code>payment_method</code></td><td>TEXT</td><td>"Cash", "Card", or "UPI"</td></tr>
+                        <tr><td><code>status</code></td><td>TEXT</td><td>Order status (default: "Completed")</td></tr>
+                        <tr><td><code>created_by</code></td><td>TEXT</td><td>Username of the staff who placed the order</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-title">🗄️ Table: OrderItems</div>
+                    <p>Stores individual items within each order.</p>
+                    <table class="styled-table">
+                        <thead><tr><th>Column</th><th>Type</th></tr></thead>
+                        <tbody>
+                            <tr><td><code>id</code></td><td>INTEGER PK</td></tr>
+                            <tr><td><code>order_id</code></td><td>INTEGER FK → Orders</td></tr>
+                            <tr><td><code>item_name</code></td><td>TEXT</td></tr>
+                            <tr><td><code>quantity</code></td><td>INTEGER</td></tr>
+                            <tr><td><code>unit_price</code></td><td>REAL</td></tr>
+                            <tr><td><code>total_price</code></td><td>REAL</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card">
+                    <div class="card-title">🗄️ Table: Settings</div>
+                    <p>Key-value store for application configuration.</p>
+                    <table class="styled-table">
+                        <thead><tr><th>Column</th><th>Type</th></tr></thead>
+                        <tbody>
+                            <tr><td><code>key</code></td><td>TEXT PK</td></tr>
+                            <tr><td><code>value</code></td><td>TEXT</td></tr>
+                        </tbody>
+                    </table>
+                    <div class="alert alert-info" style="margin-top: 12px;">
+                        <span class="alert-icon">💡</span>
+                        <div>Default keys: <code>restaurant_name</code>, <code>tax_rate</code>, <code>num_tables</code>, <code>currency_symbol</code></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- ============ 6. MODULES ============ -->
+        <div class="section" id="modules">
+            <div class="section-header">
+                <div class="section-label">Chapter 6</div>
+                <div class="section-title">Module Breakdown</div>
+                <div class="section-desc">Detailed explanation of each module's responsibilities and key methods.</div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">📦 modules/db_manager.py — DatabaseManager Class</div>
+                <p>The data access layer. All database operations are encapsulated here — the UI never writes SQL directly.</p>
+                <table class="styled-table">
+                    <thead><tr><th>Method</th><th>Purpose</th></tr></thead>
+                    <tbody>
+                        <tr><td><code>setup_database()</code></td><td>Creates tables, runs migrations, seeds default data</td></tr>
+                        <tr><td><code>authenticate()</code></td><td>Validates username/password and returns user info</td></tr>
+                        <tr><td><code>get_setting() / set_setting()</code></td><td>Read/write key-value settings</td></tr>
+                        <tr><td><code>get_categories()</code></td><td>Returns distinct active menu categories</td></tr>
+                        <tr><td><code>get_menu_items()</code></td><td>Fetches menu items with optional category/search filters</td></tr>
+                        <tr><td><code>add/update/delete_menu_item()</code></td><td>Full CRUD for menu items (delete is soft)</td></tr>
+                        <tr><td><code>place_order()</code></td><td>Inserts order + order items in a single transaction</td></tr>
+                        <tr><td><code>get_orders() / get_order_items()</code></td><td>Retrieves orders with date/table filters</td></tr>
+                        <tr><td><code>get_dashboard_stats()</code></td><td>Aggregates today's and total statistics</td></tr>
+                        <tr><td><code>get_top_items()</code></td><td>Top N items by quantity sold</td></tr>
+                        <tr><td><code>get_daily/monthly_sales()</code></td><td>Time-series sales data for charts</td></tr>
+                        <tr><td><code>get_category_sales()</code></td><td>Revenue breakdown by menu category</td></tr>
+                        <tr><td><code>get_hourly_distribution()</code></td><td>Order count by hour of day</td></tr>
+                        <tr><td><code>export_orders_csv()</code></td><td>Exports filtered orders to a CSV file</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card">
+                <div class="card-title">🖥️ main.py — SmartBillApp Class</div>
+                <p>The entire GUI application in a single class with ~40 methods organized into clear sections.</p>
+                <table class="styled-table">
+                    <thead><tr><th>Section</th><th>Key Methods</th><th>Responsibility</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>Initialization</strong></td><td><code>__init__</code>, <code>_configure_styles</code></td><td>Window setup, DB init, styles</td></tr>
+                        <tr><td><strong>Login</strong></td><td><code>show_login</code></td><td>Authentication screen</td></tr>
+                        <tr><td><strong>Layout</strong></td><td><code>create_main_layout</code>, <code>_build_sidebar</code>, <code>switch_view</code></td><td>Sidebar navigation, view switching</td></tr>
+                        <tr><td><strong>Components</strong></td><td><code>_create_header</code>, <code>_create_stat_card</code>, <code>_create_button</code></td><td>Reusable UI widgets</td></tr>
+                        <tr><td><strong>Dashboard</strong></td><td><code>show_dashboard</code></td><td>Stats, recent orders, quick actions</td></tr>
+                        <tr><td><strong>POS</strong></td><td><code>show_pos</code>, <code>_show_table_grid</code>, <code>_show_billing_interface</code></td><td>Table selection → menu → cart</td></tr>
+                        <tr><td><strong>Cart</strong></td><td><code>add_to_cart</code>, <code>_update_cart_display</code>, <code>_update_totals</code></td><td>Cart state management</td></tr>
+                        <tr><td><strong>Orders</strong></td><td><code>place_order</code>, <code>_show_receipt</code></td><td>Order placement and receipts</td></tr>
+                        <tr><td><strong>History</strong></td><td><code>show_orders</code>, <code>_view_order_details</code></td><td>Filtered order browsing</td></tr>
+                        <tr><td><strong>Menu Mgmt</strong></td><td><code>show_menu</code>, <code>_add_item_dialog</code>, <code>_edit_item_dialog</code></td><td>Menu CRUD operations</td></tr>
+                        <tr><td><strong>Analytics</strong></td><td><code>show_analytics</code>, <code>_chart_*</code> methods</td><td>Embedded matplotlib charts</td></tr>
+                        <tr><td><strong>Settings</strong></td><td><code>show_settings</code></td><td>Configuration form</td></tr>
+                        <tr><td><strong>Utility</strong></td><td><code>logout</code>, <code>export_orders</code></td><td>Session and data management</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- ============ 7. WORKFLOW ============ -->
+        <div class="section" id="workflow">
+            <div class="section-header">
+                <div class="section-label">Chapter 7</div>
+                <div class="section-title">Application Workflow</div>
+                <div class="section-desc">The complete user journey from launching the app to placing an order.</div>
+            </div>
+
+            <div class="flow-container">
+                <div class="flow-step"><div class="icon">🚀</div><h5>Launch App</h5></div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-step"><div class="icon">🗄️</div><h5>DB Init</h5></div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-step"><div class="icon">🔐</div><h5>Login</h5></div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-step"><div class="icon">📊</div><h5>Dashboard</h5></div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-step"><div class="icon">🍽️</div><h5>Select Table</h5></div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-step"><div class="icon">🔍</div><h5>Browse Menu</h5></div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-step"><div class="icon">🛒</div><h5>Build Cart</h5></div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-step"><div class="icon">💰</div><h5>Checkout</h5></div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-step"><div class="icon">🧾</div><h5>Receipt</h5></div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">📐 Order Processing Formula</div>
+                <div class="code-block">
+<span class="comment"># Billing Calculation</span>
+subtotal      = <span class="fn">sum</span>(item.qty × item.price <span class="kw">for</span> item <span class="kw">in</span> cart)
+discount_amt  = subtotal × (discount_pct / <span class="str">100</span>)
+after_discount = subtotal - discount_amt
+tax_amt       = after_discount × (tax_rate / <span class="str">100</span>)
+<span class="type">total</span>         = after_discount + tax_amt
+
+<span class="comment"># Example: Subtotal ₹1000, 10% discount, 5% tax</span>
+<span class="comment"># discount = ₹100, after_discount = ₹900, tax = ₹45</span>
+<span class="comment"># TOTAL = ₹945</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- ============ 8. UI DESIGN ============ -->
+        <div class="section" id="ui">
+            <div class="section-header">
+                <div class="section-label">Chapter 8</div>
+                <div class="section-title">UI / UX Design</div>
+                <div class="section-desc">The application uses a modern, card-based design system with a dark sidebar and light content area.</div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">🎨 Design System — Color Palette</div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-top: 12px;">
+                    <div style="background: #0f172a; color: white; padding: 14px; border-radius: 10px; text-align: center; font-size: 12px;"><strong>Primary</strong><br>#0f172a</div>
+                    <div style="background: #1e293b; color: white; padding: 14px; border-radius: 10px; text-align: center; font-size: 12px;"><strong>Secondary</strong><br>#1e293b</div>
+                    <div style="background: #3b82f6; color: white; padding: 14px; border-radius: 10px; text-align: center; font-size: 12px;"><strong>Accent</strong><br>#3b82f6</div>
+                    <div style="background: #22c55e; color: white; padding: 14px; border-radius: 10px; text-align: center; font-size: 12px;"><strong>Success</strong><br>#22c55e</div>
+                    <div style="background: #ef4444; color: white; padding: 14px; border-radius: 10px; text-align: center; font-size: 12px;"><strong>Error</strong><br>#ef4444</div>
+                    <div style="background: #f59e0b; color: white; padding: 14px; border-radius: 10px; text-align: center; font-size: 12px;"><strong>Warning</strong><br>#f59e0b</div>
+                    <div style="background: #8b5cf6; color: white; padding: 14px; border-radius: 10px; text-align: center; font-size: 12px;"><strong>Purple</strong><br>#8b5cf6</div>
+                    <div style="background: #f8fafc; color: #1e293b; padding: 14px; border-radius: 10px; text-align: center; font-size: 12px; border: 1px solid #e2e8f0;"><strong>Surface</strong><br>#f8fafc</div>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-title">🖼️ Layout Pattern</div>
+                    <p><strong>Sidebar + Content</strong> — A fixed 250px dark sidebar on the left with icon-based navigation, and a scrollable light content area on the right. A status bar at the bottom shows the current view and a live clock.</p>
+                </div>
+                <div class="card">
+                    <div class="card-title">🎭 UI Components</div>
+                    <p><strong>Cards</strong> with subtle borders, <strong>hover effects</strong> on all buttons, <strong>color-coded stat cards</strong>, <strong>Treeview tables</strong> with styled headings, and <strong>modal dialogs</strong> for forms and receipts.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- ============ 9. CODE HIGHLIGHTS ============ -->
+        <div class="section" id="code">
+            <div class="section-header">
+                <div class="section-label">Chapter 9</div>
+                <div class="section-title">Code Highlights</div>
+                <div class="section-desc">Key design patterns and techniques used in the codebase.</div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">🏗️ Class-Based Architecture</div>
+                <p>The entire application is encapsulated in the <code>SmartBillApp</code> class, eliminating global variables and making state management clean.</p>
+                <div class="code-label">main.py</div>
+                <div class="code-block">
+<span class="kw">class</span> <span class="type">SmartBillApp</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self):
+        self.root = tk.Tk()
+        self.db = <span class="type">DatabaseManager</span>()
+        self.current_user = <span class="str">None</span>
+        self.current_table = <span class="str">None</span>
+        self.cart = {}
+        <span class="comment"># ... setup window, show login</span>
+        self.root.mainloop()
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">🔄 View Switching Pattern</div>
+                <p>Views are swapped by clearing the content frame and calling the appropriate builder method. Sidebar state updates automatically.</p>
+                <div class="code-label">main.py</div>
+                <div class="code-block">
+<span class="kw">def</span> <span class="fn">switch_view</span>(self, view_name):
+    self.current_view = view_name
+    <span class="comment"># Update sidebar highlight</span>
+    <span class="kw">for</span> name, btn <span class="kw">in</span> self.sidebar_buttons.items():
+        color = Colors.<span class="type">SIDEBAR_ACTIVE</span> <span class="kw">if</span> name == view_name <span class="kw">else</span> Colors.<span class="type">PRIMARY</span>
+        self._set_frame_bg(btn, color)
+    <span class="comment"># Clear content and load new view</span>
+    self.clear_content()
+    views[view_name]()
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">🔀 Schema Migration</div>
+                <p>The database manager automatically upgrades older schemas by attempting to add missing columns — no manual migration needed.</p>
+                <div class="code-label">db_manager.py</div>
+                <div class="code-block">
+<span class="comment"># Upgrade old databases automatically</span>
+migration_columns = [
+    (<span class="str">"Orders"</span>, <span class="str">"subtotal"</span>, <span class="str">"REAL DEFAULT 0"</span>),
+    (<span class="str">"Orders"</span>, <span class="str">"discount_percent"</span>, <span class="str">"REAL DEFAULT 0"</span>),
+    <span class="comment">... more columns ...</span>
+]
+<span class="kw">for</span> table, col, col_type <span class="kw">in</span> migration_columns:
+    <span class="kw">try</span>:
+        cursor.execute(<span class="str">f"ALTER TABLE {table} ADD COLUMN {col} {col_type}"</span>)
+    <span class="kw">except</span> sqlite3.OperationalError:
+        <span class="kw">pass</span>  <span class="comment"># Column already exists</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">📊 Matplotlib Embedding</div>
+                <p>Charts are rendered directly inside Tkinter using <code>FigureCanvasTkAgg</code>, with graceful fallback if matplotib is not installed.</p>
+                <div class="code-label">main.py</div>
+                <div class="code-block">
+fig = <span class="type">Figure</span>(figsize=(<span class="str">9, 5</span>), facecolor=Colors.<span class="type">CARD</span>)
+ax = fig.add_subplot(<span class="str">111</span>)
+ax.barh(names, quantities, color=<span class="str">'#667eea'</span>)
+ax.set_title(<span class="str">'Top 10 Selling Items'</span>)
+
+canvas = <span class="type">FigureCanvasTkAgg</span>(fig, parent)
+canvas.draw()
+canvas.get_tk_widget().pack(fill=<span class="str">'both'</span>, expand=<span class="str">True</span>)
+                </div>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- ============ 10. FUTURE SCOPE ============ -->
+        <div class="section" id="future">
+            <div class="section-header">
+                <div class="section-label">Chapter 10</div>
+                <div class="section-title">Future Enhancements</div>
+                <div class="section-desc">Potential improvements for future versions of SmartBill Pro.</div>
+            </div>
+
+            <div class="grid-2">
+                <div class="feature-card">
+                    <div class="feature-icon" style="background: var(--accent-bg);">🔒</div>
+                    <h4>Password Hashing</h4>
+                    <p>Replace plain-text passwords with bcrypt or SHA-256 hashing for production-grade security.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon" style="background: var(--success-bg);">🖨️</div>
+                    <h4>Thermal Printer Support</h4>
+                    <p>Direct integration with POS receipt printers via ESC/POS protocol for physical receipt printing.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon" style="background: var(--purple-bg);">📱</div>
+                    <h4>Multi-Device / Web App</h4>
+                    <p>Convert to Flask/FastAPI + React web app for multi-device access across the restaurant.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon" style="background: var(--warning-bg);">📦</div>
+                    <h4>Inventory Management</h4>
+                    <p>Track raw ingredients, set low-stock alerts, and auto-deduct inventory when orders are placed.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon" style="background: var(--teal-bg);">🎫</div>
+                    <h4>Kitchen Display System</h4>
+                    <p>A separate screen for the kitchen showing incoming orders with preparation status tracking.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon" style="background: var(--accent-bg);">👥</div>
+                    <h4>Customer Management</h4>
+                    <p>Track customer visits, loyalty points, phone numbers, and order preferences.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon" style="background: var(--success-bg);">📊</div>
+                    <h4>PDF Reports</h4>
+                    <p>Generate PDF daily/weekly/monthly sales reports with charts using ReportLab or WeasyPrint.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon" style="background: var(--purple-bg);">🌐</div>
+                    <h4>Cloud Sync</h4>
+                    <p>Sync data to a cloud database (PostgreSQL/Firebase) for multi-location restaurant chains.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ============ FOOTER ============ -->
+    <div class="footer">
+        <strong>SmartBill Pro v2.0</strong>
+        <div class="divider-f"></div>
+        Restaurant Billing & Management System<br>
+        Built with Python • Tkinter • SQLite • Matplotlib<br><br>
+        <span style="font-size: 12px;">Mini Project Documentation • 2026</span>
+    </div>
+
+</body>
+</html>
